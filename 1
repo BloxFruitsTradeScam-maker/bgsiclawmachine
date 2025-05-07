@@ -1,3 +1,19 @@
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+
+local player = Players.LocalPlayer
+local playerGui = player:FindFirstChild("PlayerGui") or player:WaitForChild("PlayerGui")
+
+-- Tween the HumanoidRootPart to a specific CFrame
+local function TweenHumanoidRootPart(targetCFrame, duration)
+	local character = player.Character or player.CharacterAdded:Wait()
+	local hrp = character:WaitForChild("HumanoidRootPart")
+	local tweenInfo = TweenInfo.new(duration or 2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
+	local tween = TweenService:Create(hrp, tweenInfo, { CFrame = targetCFrame })
+	tween:Play()
+end
+
+-- Move hitboxes function
 local function MoveHitboxes()
 	local claw = game.Workspace:WaitForChild("ClawMachine")
 	for _, child in pairs(claw:GetChildren()) do
@@ -5,9 +21,9 @@ local function MoveHitboxes()
 			for _, grand in pairs(child:GetChildren()) do
 				if grand.Name == "HitBox" then
 					grand.CFrame = CFrame.new(
-						869.915588, 94.0095825, 1123.19495, 
-						0.000130668093, -1.00000072, 2.46933341e-05, 
-						0.999999583, 0.000130825385, -0.000888339593, 
+						869.915588, 94.0095825, 1123.19495,
+						0.000130668093, -1.00000072, 2.46933341e-05,
+						0.999999583, 0.000130825385, -0.000888339593,
 						0.000888336275, 2.48095712e-05, 1.0000006
 					)
 					task.wait(3.5)
@@ -17,61 +33,48 @@ local function MoveHitboxes()
 	end
 end
 
--- Wait for player GUI to be ready
-local player = game.Players.LocalPlayer
-local gui = Instance.new("ScreenGui")
-gui.Name = "ClawControlGui"
-gui.Parent = player:WaitForChild("PlayerGui")
-
-local button = Instance.new("TextButton")
-button.Position = UDim2.new(0.01, 0, 0.7, 0)
-button.Size = UDim2.new(0.1, 0, 0.1, 0)
-button.Text = "Move Hitboxes"
-button.BackgroundTransparency = 0
-button.Parent = gui
-
-button.MouseButton1Click:Connect(function()
-	MoveHitboxes()
-end)
-
-local TweenService = game:GetService("TweenService")
-local Players = game:GetService("Players")
-
--- Tween the HumanoidRootPart to a specific CFrame
-local function TweenHumanoidRootPart(targetCFrame, duration)
-	local player = Players.LocalPlayer
-	local character = player.Character or player.CharacterAdded:Wait()
-	local hrp = character:WaitForChild("HumanoidRootPart")
-
-	local tweenInfo = TweenInfo.new(duration or 2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
-	local tween = TweenService:Create(hrp, tweenInfo, { CFrame = targetCFrame })
-	tween:Play()
-end
-
-local player = Players.LocalPlayer
-
--- ✅ Safe fix: wait for PlayerGui properly
-local playerGui = player:FindFirstChild("PlayerGui") or player:WaitForChild("PlayerGui")
-
+-- Create the GUI once
 local gui = Instance.new("ScreenGui")
 gui.Name = "ClawControlGui"
 gui.Parent = playerGui
 
-local button = Instance.new("TextButton")
-button.Position = UDim2.new(0.11, 0, 0.7, 0)
-button.Size = UDim2.new(0.1, 0, 0.1, 0)
-button.Text = "Out"
-button.BackgroundTransparency = 0
-button.Parent = gui
+-- Button: Move Hitboxes
+local moveButton = Instance.new("TextButton")
+moveButton.Position = UDim2.new(0.01, 0, 0.7, 0)
+moveButton.Size = UDim2.new(0.1, 0, 0.1, 0)
+moveButton.Text = "Move Hitboxes"
+moveButton.Parent = gui
 
--- Define the target CFrame
-local targetCFrame = CFrame.new(
-	9887.72168, 13408.7461, 237.683044,
-	0.107264668, -2.85942974e-07, 0.994230509,
-	2.59595453e-07, 1, 2.59595282e-07,
-	-0.994230509, 2.30252311e-07, 0.107264668
-)
+moveButton.MouseButton1Click:Connect(MoveHitboxes)
 
-button.MouseButton1Click:Connect(function()
-	TweenHumanoidRootPart(targetCFrame, 2)
+-- Button: Teleport Out
+local outButton = Instance.new("TextButton")
+outButton.Position = UDim2.new(0.11, 0, 0.7, 0)
+outButton.Size = UDim2.new(0.1, 0, 0.1, 0)
+outButton.Text = "Out"
+outButton.Parent = gui
+
+outButton.MouseButton1Click:Connect(function()
+	TweenHumanoidRootPart(CFrame.new(
+		9887.72168, 13408.7461, 237.683044,
+		0.107264668, -2.85942974e-07, 0.994230509,
+		2.59595453e-07, 1, 2.59595282e-07,
+		-0.994230509, 2.30252311e-07, 0.107264668
+	), 2)
+end)
+
+-- Button: Teleport In
+local inButton = Instance.new("TextButton")
+inButton.Position = UDim2.new(0.21, 0, 0.7, 0)
+inButton.Size = UDim2.new(0.1, 0, 0.1, 0)
+inButton.Text = "In"
+inButton.Parent = gui
+
+inButton.MouseButton1Click:Connect(function()
+	TweenHumanoidRootPart(CFrame.new(
+		9888.23633, 13408.7461, 260.173187,
+		-0.741413116, 0, 0.67104888,
+		0, 1, 0,
+		-0.67104888, 0, -0.741413116
+	), 2)
 end)
