@@ -1,17 +1,12 @@
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
+local RS = game:GetService("ReplicatedStorage")
 
 local player = Players.LocalPlayer
 local playerGui = player:FindFirstChild("PlayerGui") or player:WaitForChild("PlayerGui")
-
--- Tween the HumanoidRootPart to a specific CFrame
-local function TweenHumanoidRootPart(targetCFrame, duration)
-	local character = player.Character or player.CharacterAdded:Wait()
-	local hrp = character:WaitForChild("HumanoidRootPart")
-	local tweenInfo = TweenInfo.new(duration or 2, Enum.EasingStyle.Sine, Enum.EasingDirection.Out)
-	local tween = TweenService:Create(hrp, tweenInfo, { CFrame = targetCFrame })
-	tween:Play()
-end
+local Gui = playerGui.ScreenGui
+local mini = Gui.Minigame
+local waitTime = 3.5
 
 -- Move hitboxes function
 local function MoveHitboxes()
@@ -26,11 +21,18 @@ local function MoveHitboxes()
 						0.999999583, 0.000130825385, -0.000888339593,
 						0.000888336275, 2.48095712e-05, 1.0000006
 					)
-					task.wait(3.5)
+					task.wait(waitTime)
 				end
 			end
 		end
 	end
+ 	task.wait(65 - 3 * waitTime)
+  	local prompt = Gui:WaitForChild("Prompt")
+   	prompt.Visible = false
+    	task.wait(1)
+     	mini.Visible = true
+      	task.wait(5)
+       	mini.Visible = false
 end
 
 -- Create the GUI once
@@ -46,35 +48,3 @@ moveButton.Text = "Move Hitboxes"
 moveButton.Parent = gui
 
 moveButton.MouseButton1Click:Connect(MoveHitboxes)
-
--- Button: Teleport Out
-local outButton = Instance.new("TextButton")
-outButton.Position = UDim2.new(0.11, 0, 0.7, 0)
-outButton.Size = UDim2.new(0.1, 0, 0.1, 0)
-outButton.Text = "Out"
-outButton.Parent = gui
-
-outButton.MouseButton1Click:Connect(function()
-	TweenHumanoidRootPart(CFrame.new(
-		9887.72168, 13408.7461, 237.683044,
-		0.107264668, -2.85942974e-07, 0.994230509,
-		2.59595453e-07, 1, 2.59595282e-07,
-		-0.994230509, 2.30252311e-07, 0.107264668
-	), 2)
-end)
-
--- Button: Teleport In
-local inButton = Instance.new("TextButton")
-inButton.Position = UDim2.new(0.21, 0, 0.7, 0)
-inButton.Size = UDim2.new(0.1, 0, 0.1, 0)
-inButton.Text = "In"
-inButton.Parent = gui
-
-inButton.MouseButton1Click:Connect(function()
-	TweenHumanoidRootPart(CFrame.new(
-		9888.23633, 13408.7461, 260.173187,
-		-0.741413116, 0, 0.67104888,
-		0, 1, 0,
-		-0.67104888, 0, -0.741413116
-	), 2)
-end)
