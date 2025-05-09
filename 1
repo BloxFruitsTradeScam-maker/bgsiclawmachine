@@ -29,10 +29,10 @@ local function MoveHitboxes()
  	task.wait(60 - (13 * waitTime))
   	local prompt = Gui:WaitForChild("Prompt")
    	prompt.Visible = false
-	task.wait(1)
-	mini.Visible = true
 	task.wait(0.5)
+	mini.Visible = true
 	mousemoveabs(850, 775)
+ 	task.wait(0.5)
 	mouse1press()
 	task.wait(0.5)
  	mouse1release()
