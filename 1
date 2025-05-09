@@ -26,13 +26,24 @@ local function MoveHitboxes()
 			end
 		end
 	end
- 	task.wait(60 - 3 * waitTime)
+ 	task.wait(60 - (13 * waitTime))
   	local prompt = Gui:WaitForChild("Prompt")
    	prompt.Visible = false
-    	task.wait(1)
-     	mini.Visible = true
-      	task.wait(5)
-       	mini.Visible = false
+	task.wait(1)
+	mini.Visible = true
+	task.wait(0.5)
+	mousemoveabs(850, 775)
+	mouse1press()
+	task.wait(0.5)
+ 	mouse1release()
+  	task.wait(0.5)
+	mousemoveabs(950, 825)
+	mouse1press()
+	task.wait(0.5)
+ 	mouse1release()
+	task.wait(0.5)
+	mini.Visible = false
+	task.wait(4)
 end
 
 -- Create the GUI once
@@ -47,4 +58,8 @@ moveButton.Size = UDim2.new(0.1, 0, 0.1, 0)
 moveButton.Text = "Move Hitboxes"
 moveButton.Parent = gui
 
-moveButton.MouseButton1Click:Connect(MoveHitboxes)
+moveButton.MouseButton1Click:Connect(function()
+	while true do
+		MoveHitboxes()
+ 	end
+end)
